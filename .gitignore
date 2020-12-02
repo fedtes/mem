@@ -109,3 +109,5 @@ Mem/obj
 Mem/*.csproj.user
 
 .vs
+
+Mem/wwwroot/js/
