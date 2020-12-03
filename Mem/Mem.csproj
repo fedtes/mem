@@ -3,7 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Scripts\AuthComponent.tsx" />
+    <None Remove="Scripts\authentication.ts" />
+    <None Remove="Scripts\rest.ts" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -15,6 +22,12 @@
     <Folder Include="Models\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\AuthComponent.tsx" />
+    <TypeScriptCompile Include="Scripts\authentication.ts" />
+    <TypeScriptCompile Include="Scripts\rest.ts" />
   </ItemGroup>
 
 
