@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\APIProvider.ts" />
     <None Remove="Scripts\AuthComponent.tsx" />
     <None Remove="Scripts\authentication.ts" />
-    <None Remove="Scripts\rest.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +27,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\AuthComponent.tsx" />
     <TypeScriptCompile Include="Scripts\authentication.ts" />
-    <TypeScriptCompile Include="Scripts\rest.ts" />
+    <TypeScriptCompile Include="Scripts\APIProvider.ts" />
   </ItemGroup>
 
 
