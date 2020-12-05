@@ -1,13 +1,57 @@
 ﻿import * as $ from 'jquery';
+import * as React from "react";
+import { createContext } from 'react';
+
+const APIContext = createContext<APIProvider>(null);
+
+type Props = {
+    children: React.ReactNode
+};
+
+export function useAPI() {
+    return React.useContext(APIContext);
+}
+
+export function API({ children }: Props) {
+    const api = new APIProvider();
+    return (
+        <APIContext.Provider value={api} >
+            { children }
+        </APIContext.Provider>
+    );
+}
+
+export interface IClaim {
+    token: string
+    loggeduser: string,
+    username: string
+}
+
+export class APIProvider {
+
+    private origin: string;
+    private app_name: string;
+    private refresh_url: string = "user/RefreshToken";
+    private login_page_url: string = "login";
+    private login_url: string = "user/login";
+    private ping_url: string = "user/ping";
+
+    public constructor() {
+        this.origin = window.location.origin;
+    }
+
+    private url(url: string): string { return this.origin + "/" + (this.app_name ? this.app_name + "/" : "") + url;  }
 
 
-export class RestClient {
+    private claim: IClaim = {
+        loggeduser: "",
+        token: "",
+        username:""
+    };
 
-    private refresh_url: string = "";
-    private login_page_url: string = "";
-    private login_url: string = "";
-
-    private claim: any;
+    public async ping() {
+        return this.get<boolean>(this.url(this.ping_url), {});
+    }
 
     public login(username, password) {
         const action = new Promise<any>((res, rej) => {
@@ -27,8 +71,7 @@ export class RestClient {
         });
 
         return action.then(claim => {
-            this.claim = claim,
-                this.setClaim(claim);
+            this.setClaim(claim);
             return "";
         }).catch(x => {
             switch (x.status) {

@@ -6,6 +6,7 @@
     "start": "parcel build .\\Scripts\\index.ts --out-dir .\\wwwroot\\js --out-file index.js --public-url \\js\\"
   },
   "dependencies": {
+    "jquery": "3.5.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-router-dom": "5.2.0"
@@ -24,5 +25,8 @@
     "grunt-run": "0.8.1",
     "parcel-bundler": "1.12.4",
     "typescript": "^4.0.5"
-  }
+  },
+  "browserslist": [
+    "since 2017-06"
+  ]
 }

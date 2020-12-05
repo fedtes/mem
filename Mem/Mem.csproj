@@ -7,27 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\APIProvider.ts" />
-    <None Remove="Scripts\AuthComponent.tsx" />
-    <None Remove="Scripts\authentication.ts" />
+    <None Remove="Scripts\APIProvider.tsx" />
+    <None Remove="Scripts\PrivateRoute.tsx" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\AuthComponent.tsx" />
-    <TypeScriptCompile Include="Scripts\authentication.ts" />
-    <TypeScriptCompile Include="Scripts\APIProvider.ts" />
+    <TypeScriptCompile Include="Scripts\PrivateRoute.tsx" />
+    <TypeScriptCompile Include="Scripts\APIProvider.tsx" />
   </ItemGroup>
 
 
