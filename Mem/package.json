@@ -3,7 +3,7 @@
   "name": "mem",
   "private": true,
   "scripts": {
-    "start": "parcel build .\\Scripts\\index.ts --out-dir .\\wwwroot\\js --out-file index.js --public-url \\js\\"
+    "start": "parcel build .\\Scripts\\index.ts --no-minify --out-dir .\\wwwroot\\js --out-file index.js --public-url \\js\\"
   },
   "dependencies": {
     "jquery": "3.5.1",

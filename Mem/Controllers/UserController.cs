@@ -15,8 +15,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Mem.Controllers
 {
-   
-    public class UserController : Controller
+
+    [ApiController]
+    [Route("api/v1/user")]
+    public class UserController : ControllerBase
     {
         private readonly UserService userService;
         private readonly IConfiguration configuration;
@@ -28,13 +30,15 @@ namespace Mem.Controllers
         }
 
         [Authorize]
-        public IActionResult Ping()
+        [Route("ping")]
+        public ActionResult Ping()
         {
-            return Json(true);
+            return new JsonResult(true);
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody]LoginModel login)
+        [Route("login")]
+        public ActionResult Login([FromBody]LoginModel login)
         {
             if (!Regex.IsMatch(login.username, "[a-zA-Z0-9_.@]+"))
                 return StatusCode(400);
@@ -61,9 +65,9 @@ namespace Mem.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var refresh_token = tokenHandler.CreateToken(refresh_tokenDescriptor);
 
-            Response.Cookies.Append("refreh_token", tokenHandler.WriteToken(refresh_token), new CookieOptions() { HttpOnly = true });
+            Response.Cookies.Append("refresh_token", tokenHandler.WriteToken(refresh_token), new CookieOptions() { HttpOnly = true });
 
-            return Json(new
+            return new JsonResult(new
             {
                 token = tokenHandler.WriteToken(token),
                 loggeduser = user.Name,
@@ -73,24 +77,13 @@ namespace Mem.Controllers
         }
 
         [HttpPost]
-        private SecurityTokenDescriptor CreateTokenDescriptor(ClaimsIdentity identity)
+        [Route("refreshtoken")]
+        public ActionResult RefreshToken()
         {
-            var _secret = configuration["App:Secret"].Split('|').Select(i => byte.Parse(i)).ToArray();
-
-            return new SecurityTokenDescriptor
-            {
-                Subject = identity,
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature)
-            };
-        }
-
-        public IActionResult RefreshToken()
-        {
-            if (!Request.Cookies.Any(c => "refreh_token" == c.Key))
+            if (!Request.Cookies.Any(c => "refresh_token" == c.Key))
                 return StatusCode(404);
 
-            var refresh_token = Request.Cookies.First(c => "refreh_token" == c.Key).Value;
+            var refresh_token = Request.Cookies.First(c => "refresh_token" == c.Key).Value;
             var tokenHandler = new JwtSecurityTokenHandler();
 
             try
@@ -101,7 +94,7 @@ namespace Mem.Controllers
                 var identity = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()) });
                 var token = tokenHandler.CreateToken(CreateTokenDescriptor(identity));
 
-                return Json(new
+                return new JsonResult(new
                 {
                     token = tokenHandler.WriteToken(token),
                     loggeduser = user.Name,
@@ -115,6 +108,20 @@ namespace Mem.Controllers
             }
         }
 
+        [NonAction]
+        private SecurityTokenDescriptor CreateTokenDescriptor(ClaimsIdentity identity)
+        {
+            var _secret = configuration["App:Secret"].Split('|').Select(i => byte.Parse(i)).ToArray();
+
+            return new SecurityTokenDescriptor
+            {
+                Subject = identity,
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature)
+            };
+        }
+
+        [NonAction]
         private ClaimsPrincipal ValidateRefresh_Token(JwtSecurityTokenHandler tokenHandler,string refresh_token)
         {
             var _refresh_secret = configuration["App:Refresh_Secret"].Split('|').Select(i => byte.Parse(i)).ToArray();

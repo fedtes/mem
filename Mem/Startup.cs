@@ -32,6 +32,8 @@ namespace Mem
                 .AddAuthentication(DefaultJwtScheme)
                 .AddJwtBearer(JwtBearerConfig);
 
+            services.AddRouting();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -53,14 +55,15 @@ namespace Mem
 
             app.UseMvc(routes =>
             {
-                // default routes plus any other custom routes
-                routes.MapRoute(
-                    name: "api",
-                    template: "API/v1/{controller}/{action}/{id?}");
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "/Error",
+                    defaults: new { controller = "Home", action = "Error"});
+
+                //routes.MapRoute(
+                //    name: "api",
+                //    template: "api/v1/{controller}/{action}");
 
 
                 // Catch all Route - catches anything not caught be other routes

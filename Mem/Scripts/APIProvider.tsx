@@ -24,33 +24,40 @@ export function API({ children }: Props) {
 export interface IClaim {
     token: string
     loggeduser: string,
-    username: string
+    username: string,
+    isLogged: boolean
 }
 
 export class APIProvider {
 
     private origin: string;
     private app_name: string;
-    private refresh_url: string = "user/RefreshToken";
-    private login_page_url: string = "login";
-    private login_url: string = "user/login";
-    private ping_url: string = "user/ping";
+    private api_path: string = "/api/v1";
+    private refresh_url: string = "/user/refreshtoken";
+    private login_page_url: string = "/login";
+    private login_url: string = "/user/login";
+    private ping_url: string = "/user/ping";
 
     public constructor() {
         this.origin = window.location.origin;
     }
 
-    private url(url: string): string { return this.origin + "/" + (this.app_name ? this.app_name + "/" : "") + url;  }
+    private url(url: string): string { return this.origin + (this.app_name ? "/" + this.app_name  : "") + this.api_path + url;  }
 
 
     private claim: IClaim = {
         loggeduser: "",
         token: "",
-        username:""
+        username: "",
+        isLogged: false 
     };
 
     public async ping() {
         return this.get<boolean>(this.url(this.ping_url), {});
+    }
+
+    public hasLoggedUser() {
+        return this.claim.isLogged;
     }
 
     public login(username, password) {
@@ -71,7 +78,7 @@ export class APIProvider {
         });
 
         return action.then(claim => {
-            this.setClaim(claim);
+            this.setClaim({isLogged:true, ...claim});
             return "";
         }).catch(x => {
             switch (x.status) {
@@ -195,7 +202,7 @@ export class APIProvider {
         const action = new Promise<string>((res, rej) => {
             $.ajax({
                 type: "POST",
-                url: this.refresh_url,
+                url: this.url( this.refresh_url),
                 dataType: "json",
                 contentType: "application/json; charset=UTF-8",
                 success: function (data: any) {
@@ -208,8 +215,7 @@ export class APIProvider {
         });
 
         return action.then(t => {
-            this.claim.token = t;
-            this.setClaim(this.claim);
+            this.setClaim({ isLogged: true, ...t });
             return "OK";
         }).catch(() => {
             console.error("LOGOUT!!");
