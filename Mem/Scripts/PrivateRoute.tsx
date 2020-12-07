@@ -1,17 +1,47 @@
 ﻿import { Route, Redirect } from "react-router";
-import { useAPI } from "./APIProvider";
+import { APIContext } from "./APIProvider";
 import * as React from "react";
 
-
-export function PrivateRoute({ children, ...rest }) {
-    const api = useAPI();
-    const _render = ({ location }) => {
-        if (api.hasLoggedUser())
-            return children;
-        else
-            return (<Redirect to={{ pathname: "/login", state: { from: location } }} />)
-    }
-    return (
-        <Route {...rest} render={_render} />
-    );
+interface IPrivateRoute {
+    gotoLogin:boolean
 }
+
+export class PrivateRoute extends React.Component<any,IPrivateRoute> {
+
+    private children: any;
+    private rest: any;
+
+    static contextType = APIContext
+
+    public constructor(props:any) {
+        super(props);
+        this.state = { gotoLogin: false };
+        let { children, ...rest } = props;
+        this.children = children;
+        this.rest = rest;
+    }
+
+    async componentDidMount() {
+        if (await this.context.ping()) {
+            this.setState({ gotoLogin: false });
+        } else {
+            this.setState({ gotoLogin: true });
+        }
+    }
+
+    render() {
+        if (this.context.hasLoggedUser())
+            return (<Route {...this.rest} render={({ location }) => this.children} />)
+        else if (this.state.gotoLogin)
+            return(<Redirect to={{ pathname: "/login", state: { from: location } }} />)
+        else
+            return (<Loader />)
+    }
+
+}
+
+function Loader() {
+    return (
+        <div>I'm loading</div>
+    );
+};

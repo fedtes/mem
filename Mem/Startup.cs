@@ -61,11 +61,6 @@ namespace Mem
                     template: "/Error",
                     defaults: new { controller = "Home", action = "Error"});
 
-                //routes.MapRoute(
-                //    name: "api",
-                //    template: "api/v1/{controller}/{action}");
-
-
                 // Catch all Route - catches anything not caught be other routes
                 routes.MapRoute(
                     name: "catch-all",

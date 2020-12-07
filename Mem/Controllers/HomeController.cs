@@ -10,7 +10,12 @@ namespace Mem.Controllers
     {
         public IActionResult Index()
         {
-            return View(viewName: "Pages/index.cshtml");
+            return View(viewName: "Pages/Index.cshtml");
+        }
+
+        public IActionResult Error()
+        {
+            return View(viewName: "Pages/Error.cshtml");
         }
     }
 }

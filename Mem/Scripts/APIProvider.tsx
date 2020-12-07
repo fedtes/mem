@@ -2,7 +2,7 @@
 import * as React from "react";
 import { createContext } from 'react';
 
-const APIContext = createContext<APIProvider>(null);
+export const APIContext = createContext<APIProvider>(null);
 
 type Props = {
     children: React.ReactNode

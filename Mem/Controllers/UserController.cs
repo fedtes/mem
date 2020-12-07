@@ -81,7 +81,7 @@ namespace Mem.Controllers
         public ActionResult RefreshToken()
         {
             if (!Request.Cookies.Any(c => "refresh_token" == c.Key))
-                return StatusCode(404);
+                return StatusCode(401);
 
             var refresh_token = Request.Cookies.First(c => "refresh_token" == c.Key).Value;
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -104,7 +104,7 @@ namespace Mem.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(404);
+                return StatusCode(401);
             }
         }
 
