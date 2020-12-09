@@ -64,10 +64,10 @@ export class APIProvider {
         const action = new Promise<any>((res, rej) => {
             $.ajax({
                 type: "POST",
-                url: this.login_url,
+                url: this.url(this.login_url),
                 dataType: "json",
                 contentType: "application/json; charset=UTF-8",
-                data: { usr: username, pwd: password },
+                data: JSON.stringify({ username: username, password: password }),
                 success: function (data: any) {
                     res(data);
                 },
@@ -78,7 +78,7 @@ export class APIProvider {
         });
 
         return action.then(claim => {
-            this.setClaim({isLogged:true, ...claim});
+            this.setClaim({ ...claim, isLogged: true});
             return "";
         }).catch(x => {
             switch (x.status) {
@@ -90,7 +90,7 @@ export class APIProvider {
         });
     };
 
-    private setClaim(claim: any) {
+    private setClaim(claim: IClaim) {
         this.claim = {...claim};
     };
 
@@ -129,7 +129,7 @@ export class APIProvider {
                     url: url,
                     dataType: "json",
                     contentType: "application/json; charset=UTF-8",
-                    data: params,
+                    data: JSON.stringify(params),
                     headers: {
                         Authorization: "bearer " + this.claim.token
                     },
@@ -155,7 +155,7 @@ export class APIProvider {
                     url: url,
                     dataType: "json",
                     contentType: "application/json; charset=UTF-8",
-                    data: params,
+                    data: JSON.stringify(params),
                     headers: {
                         Authorization: "bearer " + this.claim.token
                     },
@@ -181,7 +181,7 @@ export class APIProvider {
                     url: url,
                     dataType: "json",
                     contentType: "application/json; charset=UTF-8",
-                    data: params,
+                    data: JSON.stringify(params),
                     headers: {
                         Authorization: "bearer " + this.claim.token
                     },
@@ -199,7 +199,7 @@ export class APIProvider {
     };
 
     private refresh_token() {
-        const action = new Promise<string>((res, rej) => {
+        const action = new Promise<any>((res, rej) => {
             $.ajax({
                 type: "POST",
                 url: this.url( this.refresh_url),
@@ -215,7 +215,7 @@ export class APIProvider {
         });
 
         return action.then(t => {
-            this.setClaim({ isLogged: true, ...t });
+            this.setClaim({ ...t, isLogged: true });
             return "OK";
         }).catch(() => {
             console.error("LOGOUT!!");
