@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Mem.Models;
 using Microsoft.Extensions.Configuration;
+using Mem.Helpers;
 
 namespace Mem.Controllers
 {
@@ -20,11 +21,13 @@ namespace Mem.Controllers
     [Route("api/v1/user")]
     public class UserController : ControllerBase
     {
+        private readonly JWTTokenService jWTTokenService;
         private readonly UserService userService;
         private readonly IConfiguration configuration;
 
-        public UserController(UserService userService, IConfiguration configuration)
+        public UserController(JWTTokenService jWTTokenService, UserService userService, IConfiguration configuration)
         {
+            this.jWTTokenService = jWTTokenService;
             this.userService = userService;
             this.configuration = configuration;
         }
@@ -44,32 +47,13 @@ namespace Mem.Controllers
                 return StatusCode(400);
 
             if (!userService.ValidatePassword(login.username, login.password))
-                return StatusCode(404);
+                return StatusCode(401);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            
-            var _refresh_secret = configuration["App:Refresh_Secret"].Split('|').Select(i => byte.Parse(i)).ToArray();
-
-            UserModel user = userService.GetUser(login.username);
-            var identity = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()) });
-
-            SecurityTokenDescriptor tokenDescriptor = CreateTokenDescriptor(identity);
-
-            var refresh_tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = identity,
-                Expires = DateTime.UtcNow.AddHours(24),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_refresh_secret), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var refresh_token = tokenHandler.CreateToken(refresh_tokenDescriptor);
-
-            Response.Cookies.Append("refresh_token", tokenHandler.WriteToken(refresh_token), new CookieOptions() { HttpOnly = true });
-
+            UserModel user = userService.GetUser(login.username); 
+            Response.Cookies.Append("refresh_token", jWTTokenService.GetRefreshToken(user), new CookieOptions() { HttpOnly = true });
             return new JsonResult(new
             {
-                token = tokenHandler.WriteToken(token),
+                token = jWTTokenService.GetToken(user),
                 loggeduser = user.Name,
                 loggeduserid = user.ID,
                 username = user.Username
@@ -84,66 +68,24 @@ namespace Mem.Controllers
                 return StatusCode(401);
 
             var refresh_token = Request.Cookies.First(c => "refresh_token" == c.Key).Value;
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var (valid, claim) = jWTTokenService.ValidateToken(refresh_token);
 
-            try
+            if (!valid)
             {
-                var claim = ValidateRefresh_Token(tokenHandler, refresh_token);
-                var userId = claim.FindFirst(ClaimTypes.NameIdentifier).Value;
+                return StatusCode(401);
+            }
+            else
+            {
+                var userId = claim.NameIdentifier();
                 UserModel user = userService.GetUser(int.Parse(userId));
-                var identity = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()) });
-                var token = tokenHandler.CreateToken(CreateTokenDescriptor(identity));
-
                 return new JsonResult(new
                 {
-                    token = tokenHandler.WriteToken(token),
+                    token = jWTTokenService.GetToken(user),
                     loggeduser = user.Name,
                     loggeduserid = user.ID,
                     username = user.Username
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(401);
-            }
-        }
-
-        [NonAction]
-        private SecurityTokenDescriptor CreateTokenDescriptor(ClaimsIdentity identity)
-        {
-            var _secret = configuration["App:Secret"].Split('|').Select(i => byte.Parse(i)).ToArray();
-
-            return new SecurityTokenDescriptor
-            {
-                Subject = identity,
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature)
-            };
-        }
-
-        [NonAction]
-        private ClaimsPrincipal ValidateRefresh_Token(JwtSecurityTokenHandler tokenHandler,string refresh_token)
-        {
-            var _refresh_secret = configuration["App:Refresh_Secret"].Split('|').Select(i => byte.Parse(i)).ToArray();
-            var _params = new TokenValidationParameters()
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(_refresh_secret),
-                RequireSignedTokens = true,
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateLifetime = true,
-                RequireExpirationTime = true,
-                LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
-                {
-                    if (expires != null && expires.Value > DateTime.UtcNow)
-                        return true;
-                    else
-                        return false;
-                }
-            };
-            SecurityToken refreshToken;
-            return tokenHandler.ValidateToken(refresh_token, _params, out refreshToken);
         }
     }
 }

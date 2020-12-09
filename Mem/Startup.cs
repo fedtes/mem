@@ -27,6 +27,7 @@ namespace Mem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<UserService>();
+            services.AddSingleton<JWTTokenService>();
 
             services
                 .AddAuthentication(DefaultJwtScheme)
@@ -81,24 +82,7 @@ namespace Mem
 
         private void JwtBearerConfig(JwtBearerOptions opt)
         {
-            var _secret = Configuration["App:Secret"].Split('|').Select(i => byte.Parse(i)).ToArray();
-            opt.TokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(_secret),
-                RequireSignedTokens = true,
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateLifetime = true,
-                RequireExpirationTime = true,
-                LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
-                {
-                    if (expires != null && expires.Value > DateTime.UtcNow)
-                        return true;
-                    else
-                        return false;
-                }
-            };
+            opt.TokenValidationParameters = JWTTokenService.StandardValidationParameters(Configuration);
         }
     }
 }
