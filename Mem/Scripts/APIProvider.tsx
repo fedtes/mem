@@ -37,6 +37,7 @@ export class APIProvider {
     private login_page_url: string = "/login";
     private login_url: string = "/user/login";
     private ping_url: string = "/user/ping";
+    private notes_url: string = "/notes";
 
     public constructor() {
         this.origin = window.location.origin;
@@ -58,6 +59,10 @@ export class APIProvider {
 
     public hasLoggedUser() {
         return this.claim.isLogged;
+    }
+
+    public async getNotes(search:any) {
+        return this.get<any[]>(this.url(this.notes_url), { search: JSON.stringify(search) });
     }
 
     public login(username, password) {

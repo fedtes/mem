@@ -1,0 +1,12 @@
+.body-content {
+    height: 100vh;
+    overflow: hidden;
+}
+
+#root {
+    height:100%;
+}
+
+    #root .container {
+        height: 100%;
+    }
