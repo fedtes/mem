@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Scripts\APIProvider.tsx" />
+    <None Remove="Scripts\Component\TagField.tsx" />
     <None Remove="Scripts\Pages\Page.tsx" />
     <None Remove="Scripts\PrivateRoute.tsx" />
   </ItemGroup>
@@ -24,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Component\TagField.tsx" />
     <TypeScriptCompile Include="Scripts\Pages\Page.tsx" />
     <TypeScriptCompile Include="Scripts\PrivateRoute.tsx" />
     <TypeScriptCompile Include="Scripts\APIProvider.tsx" />

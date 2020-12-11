@@ -10,3 +10,37 @@
     #root .container {
         height: 100%;
     }
+
+
+        #root .container .app-note-list {
+            border-top: 1px solid #ff5a1d;
+            padding-top: 5px;
+            height: calc(100vh - 142px);
+            overflow: scroll;
+        }
+
+.app-note-list-item{
+
+}
+
+    .app-note-list-item .col {
+        border-bottom: 1px #CCC solid;
+        padding-bottom: 10px;
+    }
+
+    .app-note-list-item .app-customer-label {
+        font-weight: bold;
+        color: #555;
+    }
+
+.app-toolbar-wrapper{
+    padding:0px;
+}
+
+.navbar .nav-link[class*="icon-"] {
+    font-size: 1.6em;
+    padding: 0;
+    color: #FFF;
+}
+
+/*#ff5a1d*/

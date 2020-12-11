@@ -7,8 +7,12 @@ export default class Notes extends React.Component {
     render() {
         return (
             <Page>
-                <Toolbar />
                 <div className="container">
+                    <div className="row">
+                        <div className="col app-toolbar-wrapper">
+                            <Toolbar />
+                        </div>
+                    </div>
                     <div className="row">
                         <div className="col">
                             <div className="form-group">
@@ -28,11 +32,16 @@ export default class Notes extends React.Component {
 
 function Toolbar() {
     return (
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <nav className="navbar navbar-expand navbar-dark" style={{ "background-color": "#ff5a1d" }}>
             <div className="collapse navbar-collapse">
+                <ul className="navbar-nav">
+                    <li className="nav-item ">
+                        <div className="nav-link icon-ico-home"></div>
+                    </li>
+                </ul>
                 <ul className="navbar-nav ml-auto">
                     <li className="nav-item ">
-                        <div className="nav-link">Options</div>
+                        <div className="nav-link icon-ico-filter"></div>
                     </li>
                 </ul>
             </div>
@@ -71,7 +80,7 @@ class NoteList extends React.Component<any,any> {
             return <div>Caricamento...</div>
         } else {
             return (
-                <div className="container">
+                <div className="container app-note-list">
                     {this.state.items.map(x => <NoteListItem id={x.id} customer={x.customer} text={x.text} onSelection={this.onSelection} />)}
                 </div>
             );
@@ -83,9 +92,9 @@ class NoteList extends React.Component<any,any> {
 function NoteListItem(props:any) {
     const id = props.id;
     return (
-        <div className="row" onClick={ props.onSelection(id) }>
+        <div className="row app-note-list-item"  onClick={ props.onSelection(id) }>
             <div className="col">
-                <div>{props.customer}</div>
+                <div className="app-customer-label">{props.customer}</div>
                 <div>{props.text}</div>
             </div>
         </div>
