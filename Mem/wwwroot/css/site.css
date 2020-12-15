@@ -44,3 +44,25 @@
 }
 
 /*#ff5a1d*/
+
+
+.suggestion-container {
+    position: absolute;
+    z-index: 1;
+    background-color: #FFF;
+    left: 0;
+    right: 0;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+}
+
+    .suggestion-container .container > .row {
+        padding: 9px 5px;
+        cursor: pointer;
+    }
+
+    .suggestion-container .label {
+        color: #666;
+        font-size: 0.9em;
+        border-bottom: 1px solid #EEE;
+    }

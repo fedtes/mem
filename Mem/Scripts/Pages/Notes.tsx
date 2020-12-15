@@ -1,8 +1,22 @@
 ﻿import * as React from 'react';
 import { APIContext } from '../APIProvider';
 import Page from './Page';
+import { TagField } from '../Component/TagField';
 
 export default class Notes extends React.Component {
+
+    private noteList: React.RefObject<NoteList>;
+
+    constructor(props: any) {
+        super(props);
+        this.onSearchStringChange = this.onSearchStringChange.bind(this);
+        this.noteList = React.createRef<NoteList>();
+    }
+
+    private onSearchStringChange(searchString:string) {
+        this.noteList.current.setSearch(searchString);
+    };
+
 
     render() {
         return (
@@ -15,14 +29,11 @@ export default class Notes extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col">
-                            <div className="form-group">
-                                <label>Search by customer</label>
-                                <input type="text" className="form-control" id="customer"></input>
-                            </div>
+                            <TagField onSearchStringChange={ this.onSearchStringChange } label="Search by customer"></TagField>
                         </div>
                     </div>
                     <div className="row">
-                        <NoteList></NoteList>
+                        <NoteList ref={this.noteList}></NoteList>
                     </div>
                 </div>
             </Page>
@@ -61,14 +72,14 @@ class NoteList extends React.Component<any,any> {
         console.debug("Selected " + id);
     }
 
-    public setSearch(search:string) {
-        this.setState({ ...this.state, search: search, isLoading: (this.state.search !== search) });
-        this.refresh();
+    public setSearch(search: string) {
+        this.context.getNotes(search)
+            .then(n => this.setState({ isLoading: false, items: n, search: search }));
     }
 
-    private refresh() {
+    public refresh() {
         this.context.getNotes(this.state.search)
-            .then(n => this.setState({ isLoading: false, items: n, search: this.props.search }));
+            .then(n => this.setState({ isLoading: false, items: n, search: this.state.search }));
     }
 
     componentDidMount() {

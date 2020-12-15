@@ -32,5 +32,13 @@ namespace Mem.Controllers
             return new JsonResult(notes);
         }
 
+        [HttpGet]
+        [Route("suggestions")]
+        public ActionResult GetSuggestions(String search)
+        {
+            var sugs = noteService.GetSuggestions(search);
+            return new JsonResult(sugs);
+        }
+
     }
 }

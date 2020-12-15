@@ -10,7 +10,8 @@ namespace Mem.Services
     {
         public NoteModel[] GetNotes(string search)
         {
-            return new NoteModel[]
+            var _search = search.Trim('"');
+            var asd = new NoteModel[]
             {
                 new NoteModel() {ID=1, Customer="ACME", Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et purus quam. Nulla quis neque vel nulla egestas lacinia. Quisque sagittis, arcu non molestie blandit."},
                 new NoteModel() {ID=2, Customer="ACME", Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et purus quam. Nulla quis neque vel nulla egestas lacinia. Quisque sagittis, arcu non molestie blandit."},
@@ -30,6 +31,25 @@ namespace Mem.Services
                 new NoteModel() {ID=16, Customer="JOJO", Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et purus quam. Nulla quis neque vel nulla egestas lacinia. Quisque sagittis, arcu non molestie blandit."},
                 new NoteModel() {ID=17, Customer="JOJO", Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et purus quam. Nulla quis neque vel nulla egestas lacinia. Quisque sagittis, arcu non molestie blandit."}
             };
+
+            if (string.IsNullOrEmpty(_search))
+                return asd;
+            else
+                return asd.Where(x => x.Customer.ToUpperInvariant() == _search.ToUpperInvariant()).ToArray();
+
+        }
+
+        public String[] GetSuggestions(string search)
+        {
+            var x = new string[]
+            {
+                "ACME",
+                "NOMAC",
+                "COLOR8",
+                "JOJO"
+            };
+
+            return x.Where(y => y.ToUpperInvariant().Contains(search.ToUpperInvariant())).ToArray();
         }
     }
 }

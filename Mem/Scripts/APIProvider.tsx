@@ -38,7 +38,7 @@ export class APIProvider {
     private login_url: string = "/user/login";
     private ping_url: string = "/user/ping";
     private notes_url: string = "/notes";
-    private suggestion_url: string = "/notes/suggestion";
+    private suggestion_url: string = "/notes/suggestions";
 
     public constructor() {
         this.origin = window.location.origin;
