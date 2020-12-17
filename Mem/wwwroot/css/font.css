@@ -173,7 +173,8 @@ h1, h2, h3, h4, h5 {
     content: "\48";
 }
 
-.icon-ico-035:before {
+/*035*/
+.icon-ico-delete:before {
     content: "\49";
 }
 
@@ -466,7 +467,8 @@ h1, h2, h3, h4, h5 {
     content: "\e00c";
 }
 
-.icon-ico-108:before {
+/*108*/
+.icon-ico-back:before {
     content: "\e00d";
 }
 

@@ -33,6 +33,14 @@ namespace Mem.Controllers
         }
 
         [HttpGet]
+        [Route("{id:int}")]
+        public ActionResult GetNote(int id)
+        {
+            var note = noteService.GetNote(id);
+            return new JsonResult(note);
+        }
+
+        [HttpGet]
         [Route("suggestions")]
         public ActionResult GetSuggestions(String search)
         {

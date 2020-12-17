@@ -66,6 +66,10 @@ export class APIProvider {
         return this.get<string[]>(this.url(this.suggestion_url), { search: search });
     }
 
+    public async getNote(id: number) {
+        return this.get<any>(this.url(this.notes_url + "/" + id));
+    }
+
     public async getNotes(search:any) {
         return this.get<any[]>(this.url(this.notes_url), { search: JSON.stringify(search) });
     }
@@ -104,7 +108,7 @@ export class APIProvider {
         this.claim = {...claim};
     };
 
-    private get<TResult>(url: string, queryString: any): Promise<TResult> {
+    private get<TResult>(url: string, queryString?: any): Promise<TResult> {
 
         const action = () => {
             return new Promise<TResult>((res, rej) => {
@@ -113,7 +117,7 @@ export class APIProvider {
                     url: url,
                     dataType: "json",
                     contentType: "application/json; charset=UTF-8",
-                    data: queryString,
+                    data: queryString ? queryString : {},
                     headers: {
                         Authorization: "bearer " + this.claim.token
                     },

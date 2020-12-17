@@ -2,6 +2,8 @@
 import { APIContext } from '../APIProvider';
 import Page from './Page';
 import { TagField } from '../Component/TagField';
+import { useHistory } from 'react-router';
+import { Toolbar } from '../Component/Toolbar';
 
 export default class Notes extends React.Component {
 
@@ -24,7 +26,10 @@ export default class Notes extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col app-toolbar-wrapper">
-                            <Toolbar />
+                            <Toolbar
+                                leftCmd={<div className="nav-link icon-ico-home"></div>}
+                                righCmd={<div className="nav-link icon-ico-filter"></div>}
+                            />
                         </div>
                     </div>
                     <div className="row">
@@ -41,24 +46,6 @@ export default class Notes extends React.Component {
     };
 }
 
-function Toolbar() {
-    return (
-        <nav className="navbar navbar-expand navbar-dark" style={{ "background-color": "#ff5a1d" }}>
-            <div className="collapse navbar-collapse">
-                <ul className="navbar-nav">
-                    <li className="nav-item ">
-                        <div className="nav-link icon-ico-home"></div>
-                    </li>
-                </ul>
-                <ul className="navbar-nav ml-auto">
-                    <li className="nav-item ">
-                        <div className="nav-link icon-ico-filter"></div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    );
-}
 
 class NoteList extends React.Component<any,any> {
     static contextType = APIContext
@@ -66,10 +53,6 @@ class NoteList extends React.Component<any,any> {
     constructor(props:any) {
         super(props);
         this.state = { isLoading: true, items:[], search: "" };
-    }
-  
-    private onSelection(id: number) {
-        console.debug("Selected " + id);
     }
 
     public setSearch(search: string) {
@@ -92,7 +75,7 @@ class NoteList extends React.Component<any,any> {
         } else {
             return (
                 <div className="container app-note-list">
-                    {this.state.items.map(x => <NoteListItem id={x.id} customer={x.customer} text={x.text} onSelection={this.onSelection} />)}
+                    {this.state.items.map(x => <NoteListItem id={x.id} customer={x.customer} text={x.text} />)}
                 </div>
             );
         }
@@ -100,10 +83,11 @@ class NoteList extends React.Component<any,any> {
 };
 
 
-function NoteListItem(props:any) {
+function NoteListItem(props: any) {
+    const history = useHistory();
     const id = props.id;
     return (
-        <div className="row app-note-list-item"  onClick={ props.onSelection(id) }>
+        <div className="row app-note-list-item" onClick={() => history.push("/notes/" + id) }>
             <div className="col">
                 <div className="app-customer-label">{props.customer}</div>
                 <div>{props.text}</div>

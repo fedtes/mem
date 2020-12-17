@@ -4,6 +4,7 @@ import Login from './Pages/Login';
 import Notes from './Pages/Notes';
 import { API } from './APIProvider';
 import { PrivateRoute } from './PrivateRoute';
+import { NoteDetail } from './Pages/NoteDetail';
 
 
 export default class App extends React.Component {
@@ -15,6 +16,9 @@ export default class App extends React.Component {
                         <Route path="/login">
                             <Login />
                         </Route>
+                        <PrivateRoute path="/notes/:id">
+                            <NoteDetail />
+                        </PrivateRoute>
                         <PrivateRoute path="/notes">
                             <Notes />
                         </PrivateRoute>
