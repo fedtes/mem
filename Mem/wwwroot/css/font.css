@@ -144,7 +144,8 @@ h1, h2, h3, h4, h5 {
     content: "\41";
 }
 
-.icon-ico-028:before {
+/*028*/
+.icon-ico-new:before {
     content: "\42";
 }
 

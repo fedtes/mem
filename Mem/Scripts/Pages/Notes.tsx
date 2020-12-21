@@ -37,7 +37,7 @@ export default class Notes extends React.Component {
                             <TagField onSearchStringChange={ this.onSearchStringChange } label="Search by customer"></TagField>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="row app-note-list">
                         <NoteList ref={this.noteList}></NoteList>
                     </div>
                 </div>
@@ -74,7 +74,7 @@ class NoteList extends React.Component<any,any> {
             return <div>Caricamento...</div>
         } else {
             return (
-                <div className="container app-note-list">
+                <div className="container">
                     {this.state.items.map(x => <NoteListItem id={x.id} customer={x.customer} text={x.text} />)}
                 </div>
             );

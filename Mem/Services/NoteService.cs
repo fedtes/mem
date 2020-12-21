@@ -46,8 +46,15 @@ namespace Mem.Services
             return mock.First(x => x.ID == id);
         }
 
+        public bool SetNote(NoteModel note)
+        {
+            return true;
+        }
+
         public String[] GetSuggestions(string search)
         {
+            var _s = String.IsNullOrEmpty(search) ? "" : search;
+
             var x = new string[]
             {
                 "ACME",
@@ -56,7 +63,7 @@ namespace Mem.Services
                 "JOJO"
             };
 
-            return x.Where(y => y.ToUpperInvariant().Contains(search.ToUpperInvariant())).ToArray();
+            return x.Where(y => y.ToUpperInvariant().Contains(_s.ToUpperInvariant())).ToArray();
         }
     }
 }

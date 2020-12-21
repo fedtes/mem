@@ -2,6 +2,7 @@
 import * as React from "react";
 import { createContext } from 'react';
 
+
 export const APIContext = createContext<APIProvider>(null);
 
 type Props = {
@@ -72,6 +73,10 @@ export class APIProvider {
 
     public async getNotes(search:any) {
         return this.get<any[]>(this.url(this.notes_url), { search: JSON.stringify(search) });
+    }
+
+    public async setNote(note: any) {
+        return this.put<Boolean>(this.url(this.notes_url), note);
     }
 
     public login(username, password) {
