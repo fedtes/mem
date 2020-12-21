@@ -1,17 +1,19 @@
 ﻿import * as React from 'react'
-import {BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import {Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import Login from './Pages/Login';
 import Notes from './Pages/Notes';
 import { API } from './APIProvider';
-import { PrivateRoute } from './PrivateRoute';
+import PrivateRoute from './PrivateRoute';
 import { NoteDetail } from './Pages/NoteDetail';
+import { createBrowserHistory } from 'history';
 
+const history = createBrowserHistory();
 
 export default class App extends React.Component {
     render() {
         return (
             <API>
-                <Router>
+                <Router history={history}>
                     <Switch>
                         <Route path="/login">
                             <Login />
