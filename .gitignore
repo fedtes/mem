@@ -111,3 +111,5 @@ Mem/*.csproj.user
 .vs
 
 Mem/wwwroot/js/
+
+Mem/Properties/PublishProfiles/
