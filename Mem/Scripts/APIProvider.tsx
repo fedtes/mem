@@ -64,7 +64,7 @@ export class APIProvider {
     }
 
     public async getSuggestion(search: string) {
-        return this.get<string[]>(this.url(this.suggestion_url), { search: search });
+        return this.get<any[]>(this.url(this.suggestion_url), { search: search });
     }
 
     public async getNote(id: number) {

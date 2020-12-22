@@ -1,10 +1,15 @@
 ﻿import * as React from "react";
 import { useAPI } from "../APIProvider";
 
+interface ITag {
+    tag: string,
+    tagCleaned:string
+}
+
 interface IState {
     isDirty?:boolean,
-    searchString: string,
-    suggestions: string[];
+    tag: ITag,
+    suggestions: ITag[];
     focused:boolean
 }
 
@@ -18,7 +23,7 @@ interface ITagFieldProps {
 export function TagField(props: ITagFieldProps) {
     const textInput = React.useRef(null);
     const [state, setState] = React.useState<IState>({
-        searchString: (props.initialSearch ? props.initialSearch : ""),
+        tag: { tag: (props.initialSearch ? props.initialSearch : ""), tagCleaned: "" },
         suggestions: [],
         focused: false
     });
@@ -26,9 +31,10 @@ export function TagField(props: ITagFieldProps) {
     const api = useAPI();
 
     const onInput = (e: React.FormEvent<HTMLInputElement>) => {
-        const s = e.currentTarget.value;        
+        const s = e.currentTarget.value;   
+        const newTag = { ...state.tag, tag: s };
         api.getSuggestion(s)
-            .then(r => setState({ ...state, searchString: s, suggestions: r, isDirty: true }));
+            .then(r => setState({ ...state, tag: newTag, suggestions: r, isDirty: true }));
     };
 
     const onFocus = () => setState({ ...state, focused: true });
@@ -36,29 +42,37 @@ export function TagField(props: ITagFieldProps) {
     let timeout = null;
 
     const onBlur = () => {
-        timeout = setTimeout(() => setState({ ...state, focused: false }), 250)
+        const onBlurExec = () => {
+            setState({ ...state, focused: false });
+            if (props.onSearchStringChange) props.onSearchStringChange(state.tag.tag);
+        };
+        timeout = setTimeout(onBlurExec, 250)
     };
 
     const onItemClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (timeout) clearTimeout(timeout);
         const v = e.currentTarget.getAttribute("app-value");
-        setState({ ...state, focused: false, searchString: v });
-        if (props.onSearchStringChange) props.onSearchStringChange(v);
+        const selection = state.suggestions[parseInt(v)];
+        setState({ ...state, focused: false, tag: selection });
+        if (props.onSearchStringChange) props.onSearchStringChange(selection.tag);
     };
 
     const shouldShowAdd = () => {
-        return state.isDirty && props.allowAddNew && state.searchString.length > 0 &&  state.suggestions.filter(v => v === state.searchString).length === 0;
+        return state.isDirty
+            && props.allowAddNew
+            && state.tag.tag.length > 0
+            && state.suggestions.filter(v => v.tagCleaned === state.tag.tagCleaned).length === 0;
     }
 
     return (
         <div className="form-group" style={ {position:"relative"} }>
             <label>{props.label}</label>
-            <input ref={textInput} type="text" value={state.searchString} className="form-control" onInput={onInput} onFocus={onFocus} onBlur={onBlur}></input>
+            <input ref={textInput} type="text" value={state.tag.tag} className="form-control" onInput={onInput} onFocus={onFocus} onBlur={onBlur}></input>
 
             <div className="suggestion-container" style={{display: (state.focused? "unset": "none")}}>
                 <div className="container">
 
-                    {state.suggestions.map((s) => (<div className="row" app-value={s} onClick={onItemClick}><div className="col">{s}</div></div>))}
+                    {state.suggestions.map((s, i) => (<div className="row" app-value={i.toString()} onClick={onItemClick}><div className="col">{s.tag}</div></div>))}
 
                     <div className="row add-tag" style={{ display: (shouldShowAdd() ? "inherit" : "none") }}>
                         <div className="col"><span>Aggiungi</span></div>

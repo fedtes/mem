@@ -64,7 +64,7 @@ export function NoteDetail() {
                     </div>
                     <div className="row">
                         <div className="col">
-                            <TagField label="Customer" onSearchStringChange={onCustomerChange} allowAddNew={true} initialSearch={state.customer}></TagField>
+                            <TagField label="Customer" onSearchStringChange={onCustomerChange} allowAddNew={false} initialSearch={state.customer}></TagField>
                         </div>
                     </div>
                     <div className="row app-note-detail">
