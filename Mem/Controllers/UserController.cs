@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using Mem.Services;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using Mem.Models;
 using Microsoft.Extensions.Configuration;
 using Mem.Helpers;
@@ -50,7 +44,7 @@ namespace Mem.Controllers
                 return StatusCode(401);
 
             UserModel user = userService.GetUser(login.username); 
-            Response.Cookies.Append("refresh_token", jWTTokenService.GetRefreshToken(user), new CookieOptions() { HttpOnly = true });
+            Response.Cookies.Append("refresh_token", jWTTokenService.GetRefreshToken(user), new CookieOptions() { HttpOnly = true, Expires= System.DateTimeOffset.Now.AddHours(8) });
             return new JsonResult(new
             {
                 token = jWTTokenService.GetToken(user),

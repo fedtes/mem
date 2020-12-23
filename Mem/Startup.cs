@@ -29,6 +29,7 @@ namespace Mem
             services.AddSingleton<UserService>();
             services.AddSingleton<JWTTokenService>();
             services.AddSingleton<NoteService>();
+            services.AddSingleton<SecurityService>();
 
             services
                 .AddAuthentication(DefaultJwtScheme)
