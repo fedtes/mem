@@ -25,7 +25,7 @@ namespace Mem.Services
         public String Hash(string input, string salt)
         {
             byte[] _salt = Convert.FromBase64String(salt);
-            byte[] hash = KeyDerivation.Pbkdf2(input, _salt, KeyDerivationPrf.HMACSHA256, 10000, 256);
+            byte[] hash = KeyDerivation.Pbkdf2(input, _salt, KeyDerivationPrf.HMACSHA256, 10000, 32);
             return Convert.ToBase64String(hash);
         }
     }
