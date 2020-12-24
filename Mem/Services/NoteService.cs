@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Mem.Services
 {
@@ -30,6 +31,11 @@ namespace Mem.Services
                 new NoteModel() {ID=16, Customer="JoJo", CustomerCleaned="JOJO", Classification=NoteClassification.Giallo, DateCreated=DateTime.Now, Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et purus quam. Nulla quis neque vel nulla egestas lacinia. Quisque sagittis, arcu non molestie blandit."},
                 new NoteModel() {ID=17, Customer="JoJo", CustomerCleaned="JOJO", Classification=NoteClassification.Viola, DateCreated=DateTime.Now, Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et purus quam. Nulla quis neque vel nulla egestas lacinia. Quisque sagittis, arcu non molestie blandit."}
             };
+
+        internal bool DeleteNote(int id)
+        {
+            return true;
+        }
 
         public NoteModel[] GetNotes(string search)
         {

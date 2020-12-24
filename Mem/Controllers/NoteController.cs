@@ -74,5 +74,12 @@ namespace Mem.Controllers
             return new JsonResult(sugs);
         }
 
+
+        [HttpDelete]
+        [Route("")]
+        public ActionResult DeleteNote([FromBody]int id)
+        {
+            return new JsonResult(noteService.DeleteNote(id));
+        }
     }
 }

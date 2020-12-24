@@ -4,6 +4,7 @@ import Page from "./Page";
 import { Toolbar } from "../Component/Toolbar";
 import { TagField } from "../Component/TagField";
 import { useAPI } from "../APIProvider";
+import { Modal } from "../Component/Modal";
 
 interface IDetailState {
     loadingId: number,
@@ -14,6 +15,7 @@ interface IDetailState {
 }
 
 export function NoteDetail() {
+    const backModal = React.useRef(null);
     const { id } = useParams();
     const history = useHistory();
     const [state, setState] = React.useState<IDetailState>({
@@ -27,7 +29,22 @@ export function NoteDetail() {
     const api = useAPI();
 
     const onBackClick = () => {
-        if (state.isDirty) {
+        if (!state.customer || state.customer === "") {
+
+            const p = new Promise<number>((res, rej) => {
+
+                backModal.current.onclose = res;
+                backModal.current.show();
+
+            }).then(id => {
+                backModal.current.hide();
+                if (id === 1) {
+                    api.deleteNote(state.id)
+                        .then(() => history.push("/notes"));
+                }
+            });
+            
+        } else if (state.isDirty) {
             api.setNote({ id: state.id, customer: state.customer, text: state.text })
                 .then(() => history.push("/notes"));
         } else {
@@ -53,6 +70,9 @@ export function NoteDetail() {
     else {
         return (
             <Page>
+                <Modal ref={backModal}
+                    text = "Nessun cliente inserito per questa nota!!"
+                    options={[{ id: 1, label: "Scarta Nota", type: "danger" }, { id: 2, label: "Indietro", type: "light" }]} ></Modal>
                 <div className="container">
                     <div className="row">
                         <div className="col app-toolbar-wrapper">
