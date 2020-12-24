@@ -16,6 +16,7 @@ interface IDetailState {
 
 export function NoteDetail() {
     const backModal = React.useRef(null);
+    const delModal = React.useRef(null);
     const { id } = useParams();
     const history = useHistory();
     const [state, setState] = React.useState<IDetailState>({
@@ -52,6 +53,22 @@ export function NoteDetail() {
         }
     };
 
+    const onDeleteClick = () => {
+
+        const p = new Promise<number>((res, rej) => {
+
+            delModal.current.onclose = res;
+            delModal.current.show();
+
+        }).then(id => {
+            delModal.current.hide();
+            if (id === 1) {
+                api.deleteNote(state.id)
+                    .then(() => history.push("/notes"));
+            }
+        });
+    }
+
     const onCustomerChange = (value: string) => {
         setState({ ...state, customer: value, isDirty: true })
     };
@@ -73,12 +90,17 @@ export function NoteDetail() {
                 <Modal ref={backModal}
                     text = "Nessun cliente inserito per questa nota!!"
                     options={[{ id: 1, label: "Scarta Nota", type: "danger" }, { id: 2, label: "Indietro", type: "light" }]} ></Modal>
+
+                <Modal ref={delModal}
+                    text="Sei sicuro di voler eliminare questa nota?"
+                    options={[{ id: 1, label: "Elimina", type: "danger" }, { id: 2, label: "Indietro", type: "light" }]} ></Modal>
+
                 <div className="container">
                     <div className="row">
                         <div className="col app-toolbar-wrapper">
                             <Toolbar
                                 leftCmd={<div className="nav-link icon-ico-back" onClick={onBackClick}></div>}
-                                righCmd={<div className="nav-link icon-ico-delete"></div>}
+                                righCmd={<div className="nav-link icon-ico-delete" onClick={onDeleteClick}></div>}
                             />
                         </div>
                     </div>

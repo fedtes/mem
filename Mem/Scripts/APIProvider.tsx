@@ -79,6 +79,10 @@ export class APIProvider {
         return this.put<Boolean>(this.url(this.notes_url), note);
     }
 
+    public async createNote(note: any) {
+        return this.post<Boolean>(this.url(this.notes_url), note);
+    }
+
     public async deleteNote(id: number) {
         return this.delete<Boolean>(this.url(this.notes_url), id);
     }

@@ -477,7 +477,8 @@ h1, h2, h3, h4, h5 {
     content: "\e00e";
 }
 
-.icon-ico-110:before {
+/*110*/
+.icon-ico-add:before {
     content: "\e00f";
 }
 

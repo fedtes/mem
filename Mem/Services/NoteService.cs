@@ -11,7 +11,7 @@ namespace Mem.Services
     public class NoteService
     {
 
-        private NoteModel[] mock = new NoteModel[]
+        private static NoteModel[] mock = new NoteModel[]
             {
                 new NoteModel() {ID=1, Customer="A.C.M.E", CustomerCleaned="ACME", Classification=NoteClassification.Arancione, DateCreated=DateTime.Now, Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et purus quam. Nulla quis neque vel nulla egestas lacinia. Quisque sagittis, arcu non molestie blandit."},
                 new NoteModel() {ID=2, Customer="A.C.M.E", CustomerCleaned="ACME", Classification=NoteClassification.Nessuno, DateCreated=DateTime.Now, Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et purus quam. Nulla quis neque vel nulla egestas lacinia. Quisque sagittis, arcu non molestie blandit."},
@@ -55,9 +55,34 @@ namespace Mem.Services
             return mock.First(x => x.ID == id);
         }
 
-        public bool SetNote(NoteModel note)
+        public int SetNote(NoteModel note)
         {
-            return true;
+            if (note.ID < 0)
+            {
+                var n = new NoteModel()
+                {
+                    Text = note.Text,
+                    Customer = note.Customer,
+                    CustomerCleaned = CleanSearchString(note.Customer),
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    Classification = note.Classification,
+                    ID = mock.Max(x => x.ID) + 1
+                };
+
+                mock = mock.Append(n).ToArray();
+                return n.ID;
+            }
+            else
+            {
+                var n = GetNote(note.ID);
+                n.Text = note.Text;
+                n.Customer = note.Customer;
+                n.CustomerCleaned = CleanSearchString(note.Customer);
+                n.Classification = note.Classification;
+                n.DateUpdated = DateTime.Now;
+                return n.ID;
+            }  
         }
 
         public (String, String)[] GetSuggestions(string search)

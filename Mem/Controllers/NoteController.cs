@@ -64,6 +64,13 @@ namespace Mem.Controllers
             return new JsonResult(noteService.SetNote(note));
         }
 
+        [HttpPost]
+        [Route("")]
+        public ActionResult CreateNote(Models.NoteModel note)
+        {
+            return new JsonResult(noteService.SetNote(note));
+        }
+
         [HttpGet]
         [Route("suggestions")]
         public ActionResult GetSuggestions(String search)

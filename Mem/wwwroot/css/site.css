@@ -14,12 +14,13 @@
 
         #root .container .app-note-list, #root .container .app-note-detail {
             height: calc(100vh - 142px);
+            position:relative;
         }
 
             #root .container .app-note-list > .container, #root .container > .app-note-detail {
                 border-top: 1px solid #ff5a1d;
                 padding-top: 5px;
-                overflow: scroll;
+                overflow-y: scroll;
                 height: 100%;
             }
 
@@ -106,4 +107,19 @@
 
 .app-modal-content .row {
     margin: 10px auto;
+}
+
+
+.app-button-new {
+    position: absolute;
+    bottom: 5vh;
+    right: 4vw;
+    height: 50px;
+    width: 50px;
+    background-color: #ff5a1d;
+    border-radius: 50%;
+    padding: 0px 0 0 5px;
+    font-size: 2.4em;
+    color: #FFF;
+    cursor: pointer;
 }

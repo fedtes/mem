@@ -1,9 +1,10 @@
 ﻿import * as React from 'react';
-import { APIContext } from '../APIProvider';
+import { APIContext, useAPI } from '../APIProvider';
 import Page from './Page';
 import { TagField } from '../Component/TagField';
 import { useHistory } from 'react-router';
 import { Toolbar } from '../Component/Toolbar';
+import { func } from 'prop-types';
 
 export default class Notes extends React.Component {
 
@@ -39,6 +40,7 @@ export default class Notes extends React.Component {
                     </div>
                     <div className="row app-note-list">
                         <NoteList ref={this.noteList}></NoteList>
+                        <ButtonNew></ButtonNew>
                     </div>
                 </div>
             </Page>
@@ -95,4 +97,17 @@ function NoteListItem(props: any) {
         </div>
     )
 
+}
+
+
+function ButtonNew(props: any) {
+    const history = useHistory();
+    const api = useAPI();
+    const onClick = () => {
+        api.createNote({ id: -1, customer: "", text: ""})
+            .then(id => history.push("/notes/" + id));
+    };
+    return (
+        <div className="app-button-new" onClick={onClick}><span className="icon-ico-add"></span></div>
+    )
 }
