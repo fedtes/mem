@@ -248,7 +248,7 @@ export class APIProvider {
         }).catch(() => {
             console.error("LOGOUT!!");
             this.setClaim(null);
-            window.location.replace(this.login_page_url);
+            window.location.replace((this.app_name ? "/" + this.app_name : "")  + this.login_page_url);
             return "KO";
         });
     };

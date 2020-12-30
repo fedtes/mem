@@ -5,6 +5,7 @@ import { Toolbar } from "../Component/Toolbar";
 import { TagField } from "../Component/TagField";
 import { useAPI } from "../APIProvider";
 import { Modal } from "../Component/Modal";
+import { appPath } from "../app";
 
 interface IDetailState {
     loadingId: number,
@@ -41,15 +42,15 @@ export function NoteDetail() {
                 backModal.current.hide();
                 if (id === 1) {
                     api.deleteNote(state.id)
-                        .then(() => history.push("/notes"));
+                        .then(() => history.push(appPath("/notes")));
                 }
             });
             
         } else if (state.isDirty) {
             api.setNote({ id: state.id, customer: state.customer, text: state.text })
-                .then(() => history.push("/notes"));
+                .then(() => history.push(appPath("/notes")));
         } else {
-            history.push("/notes");
+            history.push(appPath("/notes"));
         }
     };
 
@@ -64,7 +65,7 @@ export function NoteDetail() {
             delModal.current.hide();
             if (id === 1) {
                 api.deleteNote(state.id)
-                    .then(() => history.push("/notes"));
+                    .then(() => history.push(appPath("/notes")));
             }
         });
     }

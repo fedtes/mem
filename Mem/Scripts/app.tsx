@@ -9,23 +9,28 @@ import { createBrowserHistory } from 'history';
 
 const history = createBrowserHistory();
 
+export function appPath(path: string) {
+    const root = (window as any).appRoot;
+    return (root && root !== "" ? "/" + root + path : path);
+};
+
 export default class App extends React.Component {
     render() {
         return (
             <API>
                 <Router history={history}>
                     <Switch>
-                        <Route path="/login">
+                        <Route path={ appPath("/login")}>
                             <Login />
                         </Route>
-                        <PrivateRoute path="/notes/:id">
+                        <PrivateRoute path={ appPath("/notes/:id")}>
                             <NoteDetail />
                         </PrivateRoute>
-                        <PrivateRoute path="/notes">
+                        <PrivateRoute path={ appPath("/notes")}>
                             <Notes />
                         </PrivateRoute>
-                        <Route path="/">
-                            <Redirect to={{ pathname:"/notes" } } ></Redirect>
+                        <Route path={appPath("/")}>
+                            <Redirect to={{ pathname: appPath("/notes") } } ></Redirect>
                         </Route>
                     </Switch>
                 </Router>

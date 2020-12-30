@@ -1,6 +1,7 @@
 ﻿import { Route, Redirect, withRouter } from "react-router";
 import { APIContext } from "./APIProvider";
 import * as React from "react";
+import { appPath } from "./app";
 
 class PrivateRoute extends Route {
     static contextType = APIContext
@@ -22,7 +23,7 @@ class PrivateRoute extends Route {
         if (this.context.hasLoggedUser()) {
             return super.render();
         } else if (this.state.gotoLogin) {
-            return <Redirect to='/login' />;
+            return <Redirect to={appPath('/login')} />;
         } else
             return (<Loader />)
     }

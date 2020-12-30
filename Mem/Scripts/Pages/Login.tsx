@@ -1,6 +1,7 @@
 ﻿import * as React from 'react';
 import { useAPI } from '../APIProvider';
 import { useHistory } from 'react-router';
+import { appPath } from '../app';
 
 export default function Login() {
     const [value, setFormValue] = React.useState({username:"", password:""});
@@ -10,7 +11,7 @@ export default function Login() {
         api.login(value.username, value.password)
             .then(r => {
                 if ("" === r)
-                    history.push("/");
+                    history.push(appPath("/"));
                 else
                     $('#login_form > form-group:last-child > div:last-child').css("display", "unset");
             })

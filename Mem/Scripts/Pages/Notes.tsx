@@ -5,6 +5,7 @@ import { TagField } from '../Component/TagField';
 import { useHistory } from 'react-router';
 import { Toolbar } from '../Component/Toolbar';
 import { func } from 'prop-types';
+import { appPath } from '../app';
 
 export default class Notes extends React.Component {
 
@@ -89,7 +90,7 @@ function NoteListItem(props: any) {
     const history = useHistory();
     const id = props.id;
     return (
-        <div className="row app-note-list-item" onClick={() => history.push("/notes/" + id) }>
+        <div className="row app-note-list-item" onClick={() => history.push(appPath("/notes/" + id)) }>
             <div className="col">
                 <div className="app-customer-label">{props.customer}</div>
                 <div>{props.text}</div>
@@ -105,7 +106,7 @@ function ButtonNew(props: any) {
     const api = useAPI();
     const onClick = () => {
         api.createNote({ id: -1, customer: "", text: ""})
-            .then(id => history.push("/notes/" + id));
+            .then(id => history.push(appPath("/notes/" + id)));
     };
     return (
         <div className="app-button-new" onClick={onClick}><span className="icon-ico-add"></span></div>
