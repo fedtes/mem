@@ -43,6 +43,7 @@ export class APIProvider {
 
     public constructor() {
         this.origin = window.location.origin;
+        this.app_name = (window as any).appRoot;
     }
 
     private url(url: string): string { return this.origin + (this.app_name ? "/" + this.app_name  : "") + this.api_path + url;  }

@@ -2,20 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mem.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Mem.Controllers
 {
+
     public class HomeController : Controller
     {
+        private readonly IConfiguration configuration;
+
+        public HomeController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         public IActionResult Index()
         {
-            return View(viewName: "Pages/Index.cshtml");
+            var appRoot = configuration["App:AppRoot"];
+            ViewData["AppRoot"] = appRoot;
+            return View();
         }
 
         public IActionResult Error()
         {
-            return View(viewName: "Pages/Error.cshtml");
+            return View();
         }
     }
 }

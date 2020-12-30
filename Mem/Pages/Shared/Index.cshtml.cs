@@ -9,6 +9,8 @@ namespace Mem.Pages
 {
     public class IndexModel : PageModel
     {
+        public String AppRoot { get; set; }
+
         public void OnGet()
         {
 
