@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using Mem.Models;
+using System.Text.Json;
 
 namespace Mem.Controllers
 {
@@ -24,10 +27,13 @@ namespace Mem.Controllers
         
         [HttpGet]
         [Route("")]
-        public ActionResult Notes(String search)
+        public ActionResult Notes(string search)
         {
+
+            NoteSearchModel searchModel = JsonSerializer.Deserialize<NoteSearchModel>(search);
+
             var notes = noteService
-                .GetNotes(search)
+                .GetNotes(searchModel)
                 .Select(x => new
                 {
                     Customer = HttpUtility.HtmlEncode(x.Customer),

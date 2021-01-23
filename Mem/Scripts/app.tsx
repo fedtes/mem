@@ -1,5 +1,5 @@
 ﻿import * as React from 'react'
-import {Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import {Router, Switch, Route, Link, Redirect, withRouter } from "react-router-dom";
 import Login from './Pages/Login';
 import Notes from './Pages/Notes';
 import { API } from './APIProvider';
@@ -23,14 +23,14 @@ export default class App extends React.Component {
                         <Route path={ appPath("/login")}>
                             <Login />
                         </Route>
-                        <PrivateRoute path={ appPath("/notes/:id")}>
+                        <PrivateRoute path={ appPath("/notes/detail/:id")}>
                             <NoteDetail />
                         </PrivateRoute>
-                        <PrivateRoute path={ appPath("/notes")}>
-                            <Notes />
+                        <PrivateRoute path={ appPath("/notes/:date")}>
+                            {withRouter(Notes)}
                         </PrivateRoute>
                         <Route path={appPath("/")}>
-                            <Redirect to={{ pathname: appPath("/notes") } } ></Redirect>
+                            <Redirect to={{ pathname: appPath("/notes/today") } } ></Redirect>
                         </Route>
                     </Switch>
                 </Router>

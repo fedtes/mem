@@ -42,15 +42,15 @@ export function NoteDetail() {
                 backModal.current.hide();
                 if (id === 1) {
                     api.deleteNote(state.id)
-                        .then(() => history.push(appPath("/notes")));
+                        .then(() => history.goBack());
                 }
             });
             
         } else if (state.isDirty) {
             api.setNote({ id: state.id, customer: state.customer, text: state.text })
-                .then(() => history.push(appPath("/notes")));
+                .then(() => history.goBack());
         } else {
-            history.push(appPath("/notes"));
+            history.goBack();
         }
     };
 
@@ -65,7 +65,7 @@ export function NoteDetail() {
             delModal.current.hide();
             if (id === 1) {
                 api.deleteNote(state.id)
-                    .then(() => history.push(appPath("/notes")));
+                    .then(() => history.goBack());
             }
         });
     }
@@ -101,6 +101,7 @@ export function NoteDetail() {
                         <div className="col app-toolbar-wrapper">
                             <Toolbar
                                 leftCmd={<div className="nav-link icon-ico-back" onClick={onBackClick}></div>}
+                                midCmd={<div></div>}
                                 righCmd={<div className="nav-link icon-ico-delete" onClick={onDeleteClick}></div>}
                             />
                         </div>

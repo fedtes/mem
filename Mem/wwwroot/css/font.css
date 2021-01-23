@@ -473,7 +473,8 @@ h1, h2, h3, h4, h5 {
     content: "\e00d";
 }
 
-.icon-ico-109:before {
+/*109*/
+.icon-ico-forward:before {
     content: "\e00e";
 }
 

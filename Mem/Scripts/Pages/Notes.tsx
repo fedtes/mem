@@ -4,15 +4,18 @@ import Page from './Page';
 import { TagField } from '../Component/TagField';
 import { useHistory } from 'react-router';
 import { Toolbar } from '../Component/Toolbar';
-import { func } from 'prop-types';
 import { appPath } from '../app';
+import * as he from "he";
 
 export default class Notes extends React.Component {
 
     private noteList: React.RefObject<NoteList>;
+    private date: string;
+
 
     constructor(props: any) {
         super(props);
+        this.date = props.match.params.date.toUpperCase();
         this.onSearchStringChange = this.onSearchStringChange.bind(this);
         this.noteList = React.createRef<NoteList>();
     }
@@ -29,8 +32,9 @@ export default class Notes extends React.Component {
                     <div className="row">
                         <div className="col app-toolbar-wrapper">
                             <Toolbar
-                                leftCmd={<div className="nav-link icon-ico-home"></div>}
-                                righCmd={<div className="nav-link icon-ico-filter"></div>}
+                                leftCmd={<div className="nav-link icon-ico-back"></div>}
+                                midCmd={<div className="nav-link">{he.encode(this.date)}</div>}
+                                righCmd={<div className="nav-link icon-ico-forward"></div>}
                             />
                         </div>
                     </div>
@@ -40,7 +44,7 @@ export default class Notes extends React.Component {
                         </div>
                     </div>
                     <div className="row app-note-list">
-                        <NoteList ref={this.noteList}></NoteList>
+                        <NoteList date={this.date} ref={this.noteList}></NoteList>
                         <ButtonNew></ButtonNew>
                     </div>
                 </div>
@@ -55,17 +59,18 @@ class NoteList extends React.Component<any,any> {
 
     constructor(props:any) {
         super(props);
-        this.state = { isLoading: true, items:[], search: "" };
+        const date = props.date;
+        this.state = { isLoading: true, items: [], searchString: "", filterDate: date };
     }
 
     public setSearch(search: string) {
-        this.context.getNotes(search)
-            .then(n => this.setState({ isLoading: false, items: n, search: search }));
+        this.context.getNotes({filterDate: this.state.filterDate, searchString: search})
+            .then(n => this.setState({ ...this.state, isLoading: false, items: n, searchString: search }));
     }
 
     public refresh() {
-        this.context.getNotes(this.state.search)
-            .then(n => this.setState({ isLoading: false, items: n, search: this.state.search }));
+        this.context.getNotes({ filterDate: this.state.filterDate, searchString: this.state.search})
+            .then(n => this.setState({ ...this.state, isLoading: false, items: n, searchString: this.state.search }));
     }
 
     componentDidMount() {
@@ -90,7 +95,7 @@ function NoteListItem(props: any) {
     const history = useHistory();
     const id = props.id;
     return (
-        <div className="row app-note-list-item" onClick={() => history.push(appPath("/notes/" + id)) }>
+        <div className="row app-note-list-item" onClick={() => history.push(appPath("/notes/detail/" + id)) }>
             <div className="col">
                 <div className="app-customer-label">{props.customer}</div>
                 <div>{props.text}</div>
@@ -106,7 +111,7 @@ function ButtonNew(props: any) {
     const api = useAPI();
     const onClick = () => {
         api.createNote({ id: -1, customer: "", text: ""})
-            .then(id => history.push(appPath("/notes/" + id)));
+            .then(id => history.push(appPath("/notes/detail/" + id)));
     };
     return (
         <div className="app-button-new" onClick={onClick}><span className="icon-ico-add"></span></div>

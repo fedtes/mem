@@ -46,4 +46,12 @@ namespace Mem.Models
         public string Customer;
         public string CustomerCleaned;
     }
+
+    public class NoteSearchModel
+    {
+        public string filterDate { get; set; }
+        public string searchString { get; set; }
+    }
+
+
 }
