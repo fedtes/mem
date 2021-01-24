@@ -6,11 +6,12 @@
     "start": "parcel build .\\Scripts\\index.ts --no-minify --out-dir .\\wwwroot\\js --out-file index.js --public-url \\js\\"
   },
   "dependencies": {
+    "he": "1.2.0",
     "jquery": "3.5.1",
     "react": "16.13.1",
+    "react-datepicker": "^3.4.1",
     "react-dom": "16.13.1",
-    "react-router-dom": "5.2.0",
-    "he": "1.2.0"
+    "react-router-dom": "5.2.0"
   },
   "devDependencies": {
     "@types/jquery": "3.5.4",

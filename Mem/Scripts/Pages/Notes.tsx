@@ -6,24 +6,38 @@ import { useHistory } from 'react-router';
 import { Toolbar } from '../Component/Toolbar';
 import { appPath } from '../app';
 import * as he from "he";
+import { AgendaNavigator, dateToString } from '../Component/AgendaNavigator';
 
-export default class Notes extends React.Component {
+export default class Notes extends React.Component<any,any> {
 
     private noteList: React.RefObject<NoteList>;
     private date: string;
-
+    private history;
 
     constructor(props: any) {
         super(props);
         this.date = props.match.params.date.toUpperCase();
+        this.history = props.history;
         this.onSearchStringChange = this.onSearchStringChange.bind(this);
+        this.onchange = this.onchange.bind(this);
         this.noteList = React.createRef<NoteList>();
     }
+
+    //public componentDidUpdate(prevProps) {
+    //    if (this.props.match.params.date.toUpperCase() !== prevProps.match.params.date.toUpperCase()) {
+    //        this.date = this.props.match.params.date.toUpperCase();
+    //        this.forceUpdate();
+    //    }
+    //}
 
     private onSearchStringChange(searchString:string) {
         this.noteList.current.setSearch(searchString);
     };
 
+    private onchange(date: Date) {
+        this.date = dateToString(date).toLowerCase();
+        this.history.push(appPath("/notes/" + this.date));
+    }
 
     render() {
         return (
@@ -33,7 +47,7 @@ export default class Notes extends React.Component {
                         <div className="col app-toolbar-wrapper">
                             <Toolbar
                                 leftCmd={<div className="nav-link icon-ico-back"></div>}
-                                midCmd={<div className="nav-link">{he.encode(this.date)}</div>}
+                                midCmd={<AgendaNavigator datestring={this.date} dateNavChange={this.onchange} />}
                                 righCmd={<div className="nav-link icon-ico-forward"></div>}
                             />
                         </div>

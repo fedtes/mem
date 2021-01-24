@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Scripts\APIProvider.tsx" />
+    <None Remove="Scripts\Component\AgendaNavigator.tsx" />
     <None Remove="Scripts\Component\Modal.tsx" />
     <None Remove="Scripts\Component\TagField.tsx" />
     <None Remove="Scripts\Component\Toolbar.tsx" />
@@ -30,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Component\AgendaNavigator.tsx" />
     <TypeScriptCompile Include="Scripts\Component\Modal.tsx" />
     <TypeScriptCompile Include="Scripts\Component\TagField.tsx" />
     <TypeScriptCompile Include="Scripts\Component\Toolbar.tsx" />
