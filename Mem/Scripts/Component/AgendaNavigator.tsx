@@ -31,14 +31,14 @@ function stringToDate(dateString: string) {
     }
 }
 
-export function dateToString(date: Date) {
+function dateToString(date: Date) {
     const str = (d: Date) => {
         let yyyy = "" + d.getFullYear();
         let mm = "" + d.getMonth();
         mm = mm.length === 1 ? "0" + mm : mm;
         let dd = "" + d.getDate();
         dd = dd.length === 1 ? "0" + dd : dd;
-        return yyyy + mm + dd;
+        return yyyy + '-' + mm + '-' + dd;
     };
     let now = new Date();
     const _today = str(now);
@@ -56,22 +56,62 @@ export function dateToString(date: Date) {
         return _date;
 }
 
-export function AgendaNavigator(props: any) {
-    const history = useHistory();
+export interface AgendaNavigatorProps {
+    day: string,
+    onDaySelectedChange: (day: string) => void
+}
 
-    const NavInput:any = ({ value, onClick }) => {
-        return (<button onClick={onClick}>{props.datestring}</button>);
+export function AgendaNavigator(props: AgendaNavigatorProps) {
+    const [state, setState] = React.useState<{ showPopup: boolean, dateSelected?:Date}>({ showPopup: false, dateSelected: stringToDate(props.day) });
+
+    const onDateSelected = (date: Date) => setState({ ...state, dateSelected: date });
+
+    const showPopup = () => setState({ ...state, showPopup: true });
+
+    const onOk = () => {
+        setState({ ...state, showPopup: false });
+        returnResult();
     };
 
-    const onChange = (date) => {
-        props.dateNavChange(date);
+    const onToday = () => {
+        setState({ ...state, dateSelected:new Date(), showPopup: false });
+        returnResult();
+    };
+
+    const onAll = () => {
+        setState({ ...state, dateSelected:null, showPopup: false });
+        returnResult();
+    };
+
+    const returnResult = () => {
+        const day = state.dateSelected ? dateToString(state.dateSelected) : "ALL";
+        props.onDaySelectedChange(day);
     };
 
     return (
-        <DatePicker.default
-            selected={stringToDate(props.datestring)}
-            onChange={onChange}
-            customInput={<NavInput/> } />
+        <div>
+            <button className="btn" onClick={showPopup}>{props.day}</button>
+            <div className="a-popup a-daypicker" style={state.showPopup ? { display: "inherit" } : { display: "none" }} >
+                <div className="container">
+                    <div className="row">
+                        <div className="col">
+                            <DatePicker.default selected={stringToDate(props.day)} onChange={onDateSelected} inline />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <button className="btn" onClick={onAll}>ALL</button>
+                        </div>
+                        <div className="col">
+                            <button className="btn" onClick={onToday}>TODAY</button>
+                        </div>
+                        <div className="col">
+                            <button className="btn" onClick={onOk}>OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 

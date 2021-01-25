@@ -6,40 +6,32 @@ import { useHistory } from 'react-router';
 import { Toolbar } from '../Component/Toolbar';
 import { appPath } from '../app';
 import * as he from "he";
-import { AgendaNavigator, dateToString } from '../Component/AgendaNavigator';
+import { AgendaNavigator } from '../Component/AgendaNavigator';
 
 export default class Notes extends React.Component<any,any> {
 
     private noteList: React.RefObject<NoteList>;
-    private date: string;
     private history;
 
     constructor(props: any) {
         super(props);
-        this.date = props.match.params.date.toUpperCase();
+        
         this.history = props.history;
         this.onSearchStringChange = this.onSearchStringChange.bind(this);
-        this.onchange = this.onchange.bind(this);
+        this.onDaySelectedChange = this.onDaySelectedChange.bind(this);
         this.noteList = React.createRef<NoteList>();
     }
-
-    //public componentDidUpdate(prevProps) {
-    //    if (this.props.match.params.date.toUpperCase() !== prevProps.match.params.date.toUpperCase()) {
-    //        this.date = this.props.match.params.date.toUpperCase();
-    //        this.forceUpdate();
-    //    }
-    //}
 
     private onSearchStringChange(searchString:string) {
         this.noteList.current.setSearch(searchString);
     };
 
-    private onchange(date: Date) {
-        this.date = dateToString(date).toLowerCase();
-        this.history.push(appPath("/notes/" + this.date));
+    private onDaySelectedChange(day: string) {
+        this.history.push(appPath("/notes/" + day.toLowerCase()));
     }
 
     render() {
+        const day = this.props.match.params.date.toUpperCase();
         return (
             <Page>
                 <div className="container">
@@ -47,7 +39,7 @@ export default class Notes extends React.Component<any,any> {
                         <div className="col app-toolbar-wrapper">
                             <Toolbar
                                 leftCmd={<div className="nav-link icon-ico-back"></div>}
-                                midCmd={<AgendaNavigator datestring={this.date} dateNavChange={this.onchange} />}
+                                midCmd={<AgendaNavigator day={day} onDaySelectedChange={this.onDaySelectedChange} />}
                                 righCmd={<div className="nav-link icon-ico-forward"></div>}
                             />
                         </div>
@@ -58,7 +50,7 @@ export default class Notes extends React.Component<any,any> {
                         </div>
                     </div>
                     <div className="row app-note-list">
-                        <NoteList date={this.date} ref={this.noteList}></NoteList>
+                        <NoteList date={day} ref={this.noteList}></NoteList>
                         <ButtonNew></ButtonNew>
                     </div>
                 </div>
@@ -89,6 +81,11 @@ class NoteList extends React.Component<any,any> {
 
     componentDidMount() {
         this.refresh();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps && prevProps.date !== this.props.date)
+            this.refresh();
     }
 
     render() {
